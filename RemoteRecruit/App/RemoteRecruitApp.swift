@@ -16,7 +16,11 @@ struct RemoteRecruitApp: App {
             modelContainer = container
             appContainer = AppContainer(modelContext: container.mainContext)
         } catch {
-            fatalError("Unable to create local store: \(error)")
+            let schema = Schema([SavedJobEntity.self])
+            let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
+            let container = try! ModelContainer(for: schema, configurations: configuration)
+            modelContainer = container
+            appContainer = AppContainer(modelContext: container.mainContext)
         }
     }
 

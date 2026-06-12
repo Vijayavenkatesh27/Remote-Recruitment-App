@@ -2,6 +2,7 @@ import XCTest
 @testable import RemoteRecruit
 
 final class RepositoryTests: XCTestCase {
+    @MainActor
     func testRepositoryFiltersFallbackJobsWhenNetworkFails() async throws {
         let repository = RemoteJobRepository(
             apiClient: FailingAPIClient(),

@@ -53,6 +53,13 @@ final class SearchViewModel: ObservableObject {
         }
     }
 
+    func clearQuery() async {
+        searchTask?.cancel()
+        query = ""
+        suggestions = Self.defaultSuggestions
+        await loadInitialJobs()
+    }
+
     func clearHistory() {
         historyStore.clear()
         recentSearches = []

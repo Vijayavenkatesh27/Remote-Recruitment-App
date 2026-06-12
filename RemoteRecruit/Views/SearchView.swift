@@ -60,7 +60,7 @@ private struct SearchContentView: View {
                 if !searchText.isEmpty {
                     Button {
                         searchText = ""
-                        viewModel.updateQuery("", debounce: false)
+                        Task { await viewModel.clearQuery() }
                     } label: {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundStyle(.secondary)

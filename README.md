@@ -2,7 +2,16 @@
 
 RemoteRecruit Pro is a modern SwiftUI iOS application for browsing available jobs, searching by title/company, viewing job details, and saving jobs for offline review. It was built for the "RemoteRecruit - Job Browser App" iOS Engineer technical examination.
 
-## Architecture
+## Setup Instructions
+
+1. Clone the repository.
+2. Open `RemoteRecruit.xcodeproj` in Xcode.
+3. Select an iPhone simulator.
+4. Build and run the `RemoteRecruit` target.
+
+No API key is required because the app uses the free Arbeitnow Jobs API.
+
+## Architecture Explanation
 
 - SwiftUI UI with MVVM view models.
 - Protocol-based networking, repositories, saved-job storage, and search-history storage.
@@ -11,6 +20,20 @@ RemoteRecruit Pro is a modern SwiftUI iOS application for browsing available job
 - SwiftData persistence for bookmarked jobs and offline saved-job access.
 - Task-based search debouncing for responsive real-time job search.
 - Explicit loading, empty, success, and error states.
+
+### Folder Structure
+
+- `App`: app entry point and dependency container.
+- `Models`: app domain models and state enums.
+- `Views`: SwiftUI screens.
+- `ViewModels`: MVVM presentation and business state logic.
+- `Components`: reusable UI components.
+- `Network`: endpoint, API client, DTO parsing, and network errors.
+- `Repositories`: data access, search history, saved jobs, and API fallback coordination.
+- `Services`: fallback JSON provider.
+- `Utilities`: search matching, salary estimation, haptics, previews, and theme helpers.
+- `Resources`: bundled fallback job data.
+- `RemoteRecruitTests`: XCTest coverage for business logic, repositories, and view models.
 
 ## Design Decisions
 
@@ -29,14 +52,6 @@ https://www.arbeitnow.com/api/job-board-api?page={page}
 ```
 
 The network layer is split into `Endpoint`, `APIClientProtocol`, `URLSessionAPIClient`, DTO parsing, and repository mapping.
-
-## Setup
-
-1. Open `RemoteRecruit.xcodeproj` in Xcode.
-2. Select an iPhone simulator.
-3. Build and run the `RemoteRecruit` target.
-
-No API key is required for Arbeitnow.
 
 ## Requirement Coverage
 
@@ -63,9 +78,11 @@ Verified tests:
 xcodebuild -scheme RemoteRecruit -project RemoteRecruit.xcodeproj -destination 'platform=iOS Simulator,name=iphone 17 pro,OS=26.0' test
 ```
 
-## Assumptions and Limitations
+## Assumptions Made
 
 - Arbeitnow pagination is supported through the `page` query item.
-- Salary and skill extraction are local heuristics because the API does not always return normalized fields.
+- Arbeitnow does not provide normalized salary data for every job, so salary ranges are displayed using bundled fallback data or a local salary estimate.
+- Skill extraction is heuristic-based because public job descriptions are unstructured.
+- Saved jobs are stored locally with SwiftData; if persistent storage cannot be opened, the app falls back to an in-memory store instead of crashing.
 - The app avoids claiming real AI decisions; internal ranking uses explainable keyword-based signals.
-- Tests are included in the `RemoteRecruitTests` target for execution from Xcode or CI. Use Xcode's coverage report to confirm the requested 70% business-logic coverage before submission.
+- The 70% coverage target is interpreted as business-logic coverage, not total app coverage including SwiftUI view layout code.
